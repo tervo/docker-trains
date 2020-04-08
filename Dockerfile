@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM tensorflow/tensorflow:2.0.1-gpu-py3
 
 RUN mkdir /a
 WORKDIR /a
@@ -15,7 +15,8 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # libtiff5-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev
-RUN apt-get install -y python3-tk wget graphviz python-gdal curl
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -yq python3-tk wget graphviz python-gdal curl
 # python3-libnvinfer-dev
 
 # Google sdk
@@ -32,10 +33,8 @@ apt-get install -y google-cloud-sdk google-cloud-sdk-app-engine-python google-cl
 #    apt-get update -y && apt-get install google-cloud-sdk google-cloud-sdk-app-engine-python google-cloud-sdk-app-engine-python-extras google-cloud-sdk-datalab -y
 
 # PIP stuff
-RUN pip install --upgrade pip && pip install --upgrade tensorflow==2.0 pydot graphviz keras-vis opencv-python unicodecsv pyproj requests boto boto3 psycopg2-binary unicodecsv pyproj requests google-cloud google-api-python-client google-auth-httplib2 google-cloud-bigquery[pandas] pyarrow google-cloud-storage scipy keras tensorflow-probability sklearn memory_profiler pympler scikit-learn==0.21.2
-
-# Requires newer scikit-learn
-#RUN pip install --upgrade imbalanced-learn
+RUN pip install --upgrade pip && pip install --upgrade pydot graphviz keras-vis opencv-python unicodecsv pyproj requests boto boto3 psycopg2-binary unicodecsv pyproj requests google-cloud google-api-python-client google-auth-httplib2 google-cloud-bigquery[pandas] pyarrow google-cloud-storage scipy keras tensorflow-probability sklearn memory_profiler pympler six>=1.13.9 grakel[lovasz] scikit-learn imbalanced-learn tqdm
+#scikit-learn==0.21.2
 
 # eccodes
 # RUN cd /tmp && mkdir eccodes && cd eccodes && wget https://software.ecmwf.int/wiki/download/attachments/45757960/eccodes-2.7.0-Source.tar.gz?api=v2 -O e.tar.gz && mkdir es && tar -C /tmp/eccodes -xzvf e.tar.gz && mkdir build && cd build && ls -la /tmp/eccodes/eccodes-2.7.0-Source && cmake -DCMAKE_INSTALL_PREFIX=/usr/local /tmp/eccodes/eccodes-2.7.0-Source && make && make install && rm -R /tmp/eccodes
